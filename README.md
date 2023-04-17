@@ -10,13 +10,15 @@ Currently, only Radarr is implemented. Sonarr support will be added later.
 
 Modify "config.json" with the appropriate information. 
 
-Refer to [https://support.plex.tv/articles/201638786-plex-media-server-url-commands/](Plex Server Url Commands) to get any missing information for config.json.
+Refer to [Plex Server URL Commands](https://support.plex.tv/articles/201638786-plex-media-server-url-commands/) to get any missing information for config.json.
 
 Modify `sections` as needed, it can look like:
 
-```    "sections":{
+```    
+"sections":{
         "movies": "1",
         "4k-movies": "2",
         "tv": "3",
         "4k-tv": "4"
-    }```
+    }
+```
