@@ -1,0 +1,10 @@
+{
+    "host": "host",
+    "port": "port",
+    "extention": "extention",
+    "plex-token": "plex-token",
+    "sections":{
+        "movies": "libraryID",
+        "4k-movies": "libraryID"
+    }
+}
