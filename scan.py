@@ -33,7 +33,7 @@ def getRadarrPaths(urlData,lastID):
     
     url = requests.get(f"{radarrhost}/radarr/api/v3/history/since?date={daysAgo}&includeMovie=false&apikey={radarrAPI}", verify=False).json()
     moviePaths = []
-    newID = 0
+    newID = lastID
     for movie in url:
         if movie["id"] > lastID:
             if (movie["data"].get("importedPath") != None):
