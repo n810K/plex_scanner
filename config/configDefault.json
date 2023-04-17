@@ -1,0 +1,15 @@
+{
+    "radarrhost": "host",
+    "extention": "extention",
+    "plexhost": "host",
+    "plexport": "port",
+    "plex-token": "plex-token",
+    "radarrAPI": "radarrAPI",
+    "radarr4kAPI": "radarr4kAPI",
+    "sonarrAPI": "sonarrAPI",
+    "sonarr4kAPI": "sonarr4kAPI",
+    "sections":{
+        "movies": "libraryID",
+        "4k-movies": "libraryID"
+    }
+}
