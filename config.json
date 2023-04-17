@@ -1,6 +1,7 @@
 {
-    "host": "host",
-    "port": "port",
+    "radarrhost": "host",
+    "plexhost": "host",
+    "plexport": "port",
     "extention": "extention",
     "plex-token": "plex-token",
     "sections":{
