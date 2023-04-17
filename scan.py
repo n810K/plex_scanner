@@ -4,15 +4,25 @@ import json
 import os.path
 import shutil
 import datetime
+import time
 
-def plexscan(section, plexInfo, paths):
+def setupConfig():
+    if (not os.path.exists("config.json")):
+        shutil.copy("config/configDefault.json", "config.json")
+    
+    if (not os.path.exists("lastid.json")):
+        shutil.copy("config/idDefault.json", "lastID.json")
+
+def plexscan(section, paths, plexInfo):
     plexhost = plexInfo["plexhost"]
     plexport = plexInfo["plexport"]
     plextoken = plexInfo["plex-token"]
     plexsection = plexInfo["sections"][section]
+
     for path in paths:
         url = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsection}/refresh?path={urllib.parse.quote(path)}&X-Plex-Token={plextoken}").status_code
-        print(url)
+        print(path, "code:", url)
+        time.sleep(1)
 
 def getRadarrPaths(urlData,lastID):
     radarrhost = urlData["radarrhost"]
@@ -25,26 +35,30 @@ def getRadarrPaths(urlData,lastID):
     moviePaths = []
     newID = 0
     for movie in url:
-        if movie["movieId"] >= lastID:
+        if movie["id"] > lastID:
             if (movie["data"].get("importedPath") != None):
                 fullMoviePath = (movie["data"].get("importedPath"))
                 lastSlashIndex = fullMoviePath.rfind("/")
                 trimmedPath = fullMoviePath[:lastSlashIndex+1]
                 moviePaths.append(trimmedPath)
-                if movie["movieId"] > newID:
-                    newID = movie["movieId"]
+                if movie["id"] > newID:
+                    newID = movie["id"]
 
+    #remove duplicates
+    moviePaths = set(moviePaths)
     return moviePaths, newID
 
 
 def main():
 
-    if (not os.path.exists("config.json")):
-        shutil.copy("config/configDefault.json", "config.json")
+    setupConfig()
 
     with open("config.json") as jsonConfig:
         data = json.load(jsonConfig)
-    
+
+    with open('lastid.json') as lastidfile:
+        lastID = json.load(lastidfile)
+
     sectionList = []
     for section in data["sections"]:
         sectionList.append(section)
@@ -55,13 +69,15 @@ def main():
         librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
 
     if (librarySelection == "movies"):
-        moviePaths, newID = getRadarrPaths(data, newID)
+        moviePaths, updatedID = getRadarrPaths(data, lastID["lastid"])
 
-        plexscan(librarySelection, data, moviePaths)
+        lastID["lastid"] = updatedID
+        with open('lastid.json', 'w') as lastidfile:
+            json.dump(lastID, lastidfile)
+
+        plexscan(librarySelection, moviePaths, data)
 
     
-
-
 
 if __name__ == "__main__":
     main()
