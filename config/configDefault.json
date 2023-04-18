@@ -1,14 +1,22 @@
 {
-    "radarrhost": "host",
+    "arrhost": "host",
     "plexhost": "host",
     "plexport": "port",
     "plex-token": "plex-token",
-    "radarrAPI": "radarrAPI",
-    "radarr4kAPI": "radarr4kAPI",
-    "sonarrAPI": "sonarrAPI",
-    "sonarr4kAPI": "sonarr4kAPI",
     "sections":{
         "movies": "libraryID",
         "4k-movies": "libraryID"
+    },
+    "mappings": {
+        "movies": "radarr",
+        "4k-movies": "radarr4k",
+        "tv": "sonarr",
+        "4k-tv": "sonarr4k"
+    },
+    "APIs": {
+        "movies": "radarrAPI",
+        "4k-movies": "radarr4kAPI",
+        "tv": "sonarrAPI",
+        "4k-tv": "sonarr4kAPI",
     }
 }
