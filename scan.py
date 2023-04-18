@@ -38,13 +38,12 @@ def getArrPaths(lastIDJson, configJson, variant):
     today = datetime.datetime.now()
     daysAgo = (today - datetime.timedelta(days=7)).date()
     url = requests.get(f"{arrHost}/{mappedArrVariant}/api/v3/history/since?date={daysAgo}&include{mediaType}=false&apikey={arrAPI}", verify=False).json()
-
     mediaPaths = []
     newID = lastID
     for media in url:
         if media["id"] > lastID:
-            if (media["data"].get("importedPath") != None):
-                fullMediaPath = (media["data"].get("importedPath"))
+            if (media["data"].get("importedPath") != None or media["data"].get("path") != None):
+                fullMediaPath = (media["data"].get("importedPath") or media["data"].get("path"))
                 lastSlashIndex = fullMediaPath.rfind("/")
                 trimmedPath = fullMediaPath[:lastSlashIndex+1]
                 mediaPaths.append(trimmedPath)
@@ -71,13 +70,20 @@ def main():
     for section in configData["sections"]:
         sectionList.append(section)
 
+
     librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
-    while (librarySelection not in sectionList):
+    while (librarySelection not in sectionList and librarySelection!="all"):
         print("Invalid Selection:")
         librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
     
-    mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
-    plexscan(mediaPaths, configData, librarySelection)
+    if (librarySelection == "all"):
+        for item in sectionList:
+            librarySelection = item
+            mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
+            plexscan(mediaPaths, configData, librarySelection)
+    else:
+        mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
+        plexscan(mediaPaths, configData, librarySelection)
 
 if __name__ == "__main__":
     main()
