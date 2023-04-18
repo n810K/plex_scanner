@@ -24,15 +24,20 @@ def plexscan(section, paths, plexInfo):
         print(path, "code:", url)
         time.sleep(1)
 
-def getRadarrPaths(urlData,lastID):
+def getRadarrPaths(urlData,lastID, variant):
     radarrhost = urlData["radarrhost"]
     radarrAPI = urlData["radarrAPI"]
 
     #Limit to 1 week back, to not have a massive list of items to sort through
     today = datetime.datetime.now()
     daysAgo = (today - datetime.timedelta(days=7)).date()
-    
-    url = requests.get(f"{radarrhost}/radarr/api/v3/history/since?date={daysAgo}&includeMovie=false&apikey={radarrAPI}", verify=False).json()
+
+    if (variant == "movies"):
+        radarrAPI = urlData["radarrAPI"]
+        url = requests.get(f"{radarrhost}/radarr/api/v3/history/since?date={daysAgo}&includeMovie=false&apikey={radarrAPI}", verify=False).json()
+    elif (variant == "4k-movies"):
+        radarr4kAPI = urlData["radarr4kAPI"]
+        url = requests.get(f"{radarrhost}/radarr4k/api/v3/history/since?date={daysAgo}&includeMovie=false&apikey={radarr4kAPI}", verify=False).json()
 
     moviePaths = []
     newID = lastID
@@ -71,10 +76,19 @@ def main():
         librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
 
     if (librarySelection == "movies"):
-        moviePaths, updatedID = getRadarrPaths(data, lastID["radarr"])
+        moviePaths, updatedID = getRadarrPaths(data, lastID["radarr"], "movies")
 
         #Update lastid json to be the last processed item
         lastID["radarr"] = updatedID
+        with open('lastid.json', 'w') as lastidfile:
+            json.dump(lastID, lastidfile)
+
+        plexscan(librarySelection, moviePaths, data)
+
+    if (librarySelection == "4k-movies"):
+        moviePaths, updatedID = getRadarrPaths(data, lastID["radarr4k"], "4k-movies")
+        
+        lastID["radarr4k"] = updatedID
         with open('lastid.json', 'w') as lastidfile:
             json.dump(lastID, lastidfile)
 
