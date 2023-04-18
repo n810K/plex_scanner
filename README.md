@@ -1,10 +1,8 @@
-# plex_scanner (WIP)
+# plex_scanner
 
 ## A Plex to work with the *Arrs 
 
 Plex is unable to properly track which folders have been updated on a Google Drive mount. This is a tool to manually scan any files that have been recently changed through the *Arrs, using Plex Server URL Commands.
-
-Currently, only Radarr is implemented. Sonarr support will be added later.
 
 ## Setup
 
@@ -22,3 +20,5 @@ Modify `sections` as needed, it can look like:
         "4k-tv": "4"
     }
 ```
+
+API keys are stored in plaintext
