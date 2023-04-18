@@ -28,10 +28,12 @@ def getRadarrPaths(urlData,lastID):
     radarrhost = urlData["radarrhost"]
     radarrAPI = urlData["radarrAPI"]
 
+    #Limit to 1 week back, to not have a massive list of items to sort through
     today = datetime.datetime.now()
     daysAgo = (today - datetime.timedelta(days=7)).date()
     
     url = requests.get(f"{radarrhost}/radarr/api/v3/history/since?date={daysAgo}&includeMovie=false&apikey={radarrAPI}", verify=False).json()
+
     moviePaths = []
     newID = lastID
     for movie in url:
@@ -69,9 +71,10 @@ def main():
         librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
 
     if (librarySelection == "movies"):
-        moviePaths, updatedID = getRadarrPaths(data, lastID["lastid"])
+        moviePaths, updatedID = getRadarrPaths(data, lastID["radarr"])
 
-        lastID["lastid"] = updatedID
+        #Update lastid json to be the last processed item
+        lastID["radarr"] = updatedID
         with open('lastid.json', 'w') as lastidfile:
             json.dump(lastID, lastidfile)
 
