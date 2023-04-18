@@ -52,7 +52,7 @@ def getRadarrPaths(urlData,lastID, variant):
                     newID = movie["id"]
 
     #remove duplicates
-    moviePaths = set(moviePaths)
+    moviePaths = sorted(set(moviePaths))
     return moviePaths, newID
 
 
