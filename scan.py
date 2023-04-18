@@ -37,7 +37,6 @@ def getArrPaths(lastIDJson, configJson, variant):
     #Limit to 1 week back, to not have a massive list of items to sort through
     today = datetime.datetime.now()
     daysAgo = (today - datetime.timedelta(days=7)).date()
-    print(f"{arrHost}/{mappedArrVariant}/api/v3/history/since?date={daysAgo}&include{mediaType}=false&apikey={arrAPI}")
     url = requests.get(f"{arrHost}/{mappedArrVariant}/api/v3/history/since?date={daysAgo}&include{mediaType}=false&apikey={arrAPI}", verify=False).json()
 
     mediaPaths = []
