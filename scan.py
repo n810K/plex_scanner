@@ -29,9 +29,9 @@ def getArrPaths(lastIDJson, configJson, variant):
     arrAPI = configJson["APIs"][variant]
     lastID = lastIDJson[mappedArrVariant]
 
-    if (mappedArrVariant == "radarr" or mappedArrVariant == "radarr4k"):
+    if ("radarr" in mappedArrVariant.lower()):
         mediaType = "Movie"
-    elif (mappedArrVariant == "sonarr" or mappedArrVariant == "sonarr4k"):
+    elif ("sonarr" in mappedArrVariant.lower()):
         mediaType = "Series"
 
     #Limit to 1 week back, to not have a massive list of items to sort through
