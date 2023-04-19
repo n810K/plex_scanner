@@ -1,10 +1,11 @@
 import requests
-import urllib
 import json
 import os.path
 import shutil
 import datetime
 import time
+
+requests.packages.urllib3.disable_warnings() 
 
 def setupConfig():
     if (not os.path.exists("config.json")):
@@ -19,7 +20,7 @@ def plexscan(paths, plexInfo, variant):
     plexsectionID = plexInfo["sections"][variant]
 
     for path in paths:
-        url = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={urllib.parse.quote(path)}&X-Plex-Token={plextoken}").status_code
+        url = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
         print(path, "code:", url)
         time.sleep(0.5)
 
