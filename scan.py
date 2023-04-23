@@ -82,7 +82,7 @@ def main():
     manualOrAuto = input("Manual (manual) or Automatic (auto) scan? ")
     while (manualOrAuto != "manual" and manualOrAuto != "auto"):
         print("Invalid Selection: ")
-        manualOrAuto = input("Manual (manual) or Automatic (auto) scan? ")
+        manualOrAuto = input("Would you like to perform a manual (manual) or an automatic (auto) scan? ")
 
     librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
     while (librarySelection not in sectionList and librarySelection!="all"):
