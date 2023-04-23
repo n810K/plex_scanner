@@ -20,10 +20,14 @@ def plexscan(paths, plexInfo, variant):
     plexsectionID = plexInfo["sections"][variant]
 
     for path in paths:
-        url = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
-        print(path, "code:", url)
+        statusCode = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
+        if (statusCode != 200):
+            print("ERROR:", path, "code:", statusCode)
+        else:
+            print(path, "code:", statusCode)
         time.sleep(0.5)
 
+    
 def getArrPaths(lastIDJson, configJson, variant):
     mappedArrVariant = configJson["mappings"][variant]
     arrHost = configJson["arrhost"]
@@ -70,7 +74,6 @@ def main():
     sectionList = []
     for section in configData["sections"]:
         sectionList.append(section)
-
 
     librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
     while (librarySelection not in sectionList and librarySelection!="all"):
