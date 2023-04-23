@@ -27,7 +27,18 @@ def plexscan(paths, plexInfo, variant):
             print(path, "code:", statusCode)
         time.sleep(0.5)
 
+def manualScan(path, plexInfo, variant):
+    plexhost = plexInfo["plexhost"]
+    plexport = plexInfo["plexport"]
+    plextoken = plexInfo["plex-token"]
+    plexsectionID = plexInfo["sections"][variant]
     
+    statusCode = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
+    if (statusCode != 200):
+        print("ERROR:", path, "code:", statusCode)
+    else:
+        print(path, "code:", statusCode)
+
 def getArrPaths(lastIDJson, configJson, variant):
     mappedArrVariant = configJson["mappings"][variant]
     arrHost = configJson["arrhost"]
@@ -74,20 +85,28 @@ def main():
     sectionList = []
     for section in configData["sections"]:
         sectionList.append(section)
+    
+    manualOrAuto = input("Manual (manual) or Automatic (auto) scan? ")
 
     librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
     while (librarySelection not in sectionList and librarySelection!="all"):
         print("Invalid Selection:")
         librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
-    
-    if (librarySelection == "all"):
-        for item in sectionList:
-            librarySelection = item
+
+    if (manualOrAuto == "auto"):
+        if (librarySelection == "all"):
+            for item in sectionList:
+                librarySelection = item
+                mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
+                plexscan(mediaPaths, configData, librarySelection)
+        else:
             mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
             plexscan(mediaPaths, configData, librarySelection)
-    else:
-        mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
-        plexscan(mediaPaths, configData, librarySelection)
 
+    elif (manualOrAuto == "manual"):
+        manualPath = input("Enter the path that you would like scanned: ")
+        manualScan(manualPath, configData, librarySelection)
+
+    
 if __name__ == "__main__":
     main()
