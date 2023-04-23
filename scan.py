@@ -27,18 +27,6 @@ def plexscan(paths, plexInfo, variant):
             print(path, "code:", statusCode)
         time.sleep(0.5)
 
-def manualScan(path, plexInfo, variant):
-    plexhost = plexInfo["plexhost"]
-    plexport = plexInfo["plexport"]
-    plextoken = plexInfo["plex-token"]
-    plexsectionID = plexInfo["sections"][variant]
-    
-    statusCode = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
-    if (statusCode != 200):
-        print("ERROR:", path, "code:", statusCode)
-    else:
-        print(path, "code:", statusCode)
-
 def getArrPaths(lastIDJson, configJson, variant):
     mappedArrVariant = configJson["mappings"][variant]
     arrHost = configJson["arrhost"]
@@ -87,6 +75,9 @@ def main():
         sectionList.append(section)
     
     manualOrAuto = input("Manual (manual) or Automatic (auto) scan? ")
+    while (manualOrAuto != "manual" and manualOrAuto != "auto"):
+        print("Invalid Selection: ")
+        manualOrAuto = input("Manual (manual) or Automatic (auto) scan? ")
 
     librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
     while (librarySelection not in sectionList and librarySelection!="all"):
@@ -104,8 +95,19 @@ def main():
             plexscan(mediaPaths, configData, librarySelection)
 
     elif (manualOrAuto == "manual"):
-        manualPath = input("Enter the path that you would like scanned: ")
-        manualScan(manualPath, configData, librarySelection)
+        manualPathsList = []
+        manualPath = ""
+        
+        print("All paths must be within the same library. Enter no path to stop adding paths. Please ensure that your paths are correct, there is no path validation")
+
+        while (True): 
+            manualPath = input("Enter the path that you would like scanned: ").replace("&", "%26")
+            if (manualPath == ""):
+                break
+
+            manualPathsList.append(manualPath)
+
+        plexscan(manualPathsList, configData, librarySelection)
 
     
 if __name__ == "__main__":
