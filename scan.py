@@ -18,6 +18,7 @@ def plexscan(paths, plexInfo, variant):
     plexport = plexInfo["plexport"]
     plextoken = plexInfo["plex-token"]
     plexsectionID = plexInfo["sections"][variant]
+    mappedArrVariant = plexInfo["mappings"][variant]
 
     for path in paths:
         statusCode = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
@@ -25,7 +26,11 @@ def plexscan(paths, plexInfo, variant):
             print("ERROR:", path, "code:", statusCode)
         else:
             print(path, "code:", statusCode)
-        time.sleep(0.5)
+            
+        if ("radarr" in mappedArrVariant.lower()):
+            time.sleep(0.5)
+        elif ("sonarr" in mappedArrVariant.lower()):
+            time.sleep(15)
 
 def getArrPaths(lastIDJson, configJson, variant):
     mappedArrVariant = configJson["mappings"][variant]
