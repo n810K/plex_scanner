@@ -46,7 +46,7 @@ def getArrPaths(lastIDJson, configJson, variant):
             if (media["data"].get("importedPath") != None or media["data"].get("path") != None):
                 fullMediaPath = (media["data"].get("importedPath") or media["data"].get("path"))
                 lastSlashIndex = fullMediaPath.rfind("/")
-                trimmedPath = fullMediaPath[:lastSlashIndex+1]
+                trimmedPath = fullMediaPath[:lastSlashIndex+1].replace("&", "%26")
                 mediaPaths.append(trimmedPath)
                 if media["id"] > newID:
                     newID = media["id"]
