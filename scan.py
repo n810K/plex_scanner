@@ -26,11 +26,8 @@ def plexscan(paths, plexInfo, variant):
             print("ERROR:", path, "code:", statusCode)
         else:
             print(path, "code:", statusCode)
-            
-        if ("radarr" in mappedArrVariant.lower()):
-            time.sleep(0.5)
-        elif ("sonarr" in mappedArrVariant.lower()):
-            time.sleep(15)
+        
+        time.sleep(0.25)
 
 def getArrPaths(lastIDJson, configJson, variant):
     mappedArrVariant = configJson["mappings"][variant]
