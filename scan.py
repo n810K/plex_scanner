@@ -78,7 +78,7 @@ def main():
         sectionList.append(section)
     
     manualOrAuto = input("Manual (manual) or Automatic (auto) scan? ")
-    while (manualOrAuto != "manual" and manualOrAuto != "auto"):
+    while (manualOrAuto != "manual" and manualOrAuto != "m" and manualOrAuto != "auto" and manualOrAuto != "a"):
         print("Invalid Selection: ")
         manualOrAuto = input("Would you like to perform a manual (manual) or an automatic (auto) scan? ")
 
@@ -87,7 +87,7 @@ def main():
         print("Invalid Selection:")
         librarySelection = input(f"Which library would you like to scan? {sectionList}: ")
 
-    if (manualOrAuto == "auto"):
+    if (manualOrAuto == "auto" or manualOrAuto == "a"):
         if (librarySelection == "all"):
             for item in sectionList:
                 librarySelection = item
@@ -97,7 +97,7 @@ def main():
             mediaPaths = getArrPaths(lastIDData, configData, librarySelection)
             plexscan(mediaPaths, configData, librarySelection)
 
-    elif (manualOrAuto == "manual"):
+    elif (manualOrAuto == "manual" or manualOrAuto == "m"):
         manualPathsList = []
         manualPath = ""
         
