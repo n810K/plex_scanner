@@ -41,9 +41,9 @@ def getArrPaths(lastIDJson, configJson, variant):
     elif ("sonarr" in mappedArrVariant.lower()):
         mediaType = "Series"
 
-    #Limit to 1 week back, to not have a massive list of items to sort through
+    #Limit to 2 weeks back, to not have a massive list of items to sort through
     today = datetime.datetime.now()
-    daysAgo = (today - datetime.timedelta(days=7)).date()
+    daysAgo = (today - datetime.timedelta(days=14)).date()
     url = requests.get(f"{arrHost}/{mappedArrVariant}/api/v3/history/since?date={daysAgo}&include{mediaType}=false&apikey={arrAPI}", verify=False).json()
     mediaPaths = []
     newID = lastID
