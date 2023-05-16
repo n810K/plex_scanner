@@ -28,6 +28,8 @@ def plexscan(paths, plexInfo, variant):
         
         time.sleep(0.25)
     
+    print(f"Scanned {len(paths)} paths in {variant}")
+
     return 0 
 
 def getArrPaths(lastIDJson, configJson, variant):
