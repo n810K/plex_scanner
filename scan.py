@@ -19,6 +19,8 @@ def plexscan(paths, plexInfo, variant):
     plextoken = plexInfo["plex-token"]
     plexsectionID = plexInfo["sections"][variant]
 
+    print(f"Beginning scan for section: --{variant}--")
+
     for path in paths:
         statusCode = requests.get(f"{plexhost}:{plexport}/library/sections/{plexsectionID}/refresh?path={path}&X-Plex-Token={plextoken}").status_code
         if (statusCode != 200):
@@ -43,9 +45,9 @@ def getArrPaths(lastIDJson, configJson, variant):
     elif ("sonarr" in mappedArrVariant.lower()):
         mediaType = "Series"
 
-    #Limit to 2 weeks back, to not have a massive list of items to sort through
+    #Limit to 1 month back, to not have a massive list of items to sort through
     today = datetime.datetime.now()
-    daysAgo = (today - datetime.timedelta(days=14)).date()
+    daysAgo = (today - datetime.timedelta(days=30)).date()
     url = requests.get(f"{arrHost}/{mappedArrVariant}/api/v3/history/since?date={daysAgo}&include{mediaType}=false&apikey={arrAPI}", verify=False).json()
     mediaPaths = []
     newID = lastID
